@@ -1,0 +1,4 @@
+LICENSE
+go.sum
+.vscode/**
+.gptignore
