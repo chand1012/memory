@@ -112,11 +112,22 @@ func (m *Memory) Search(query string) ([]MemoryFragment, error) {
 	return results, nil
 }
 
-// TopFragment returns the fragment with the highest score
-func TopFragment(fragments []MemoryFragment) MemoryFragment {
+// TopFragmentScore returns the fragment with the highest score
+func TopFragmentScore(fragments []MemoryFragment) MemoryFragment {
 	var top MemoryFragment
 	for _, fragment := range fragments {
 		if fragment.Score > top.Score {
+			top = fragment
+		}
+	}
+	return top
+}
+
+// TopFragmentAvg returns the fragment with the highest average score
+func TopFragmentAvg(fragments []MemoryFragment) MemoryFragment {
+	var top MemoryFragment
+	for _, fragment := range fragments {
+		if fragment.Avg > top.Avg {
 			top = fragment
 		}
 	}

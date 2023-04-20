@@ -36,8 +36,8 @@ func TestMemoryIndex(t *testing.T) {
 		t.Errorf("Unexpected search results: %+v", results)
 	}
 
-	// Test the TopFragment function
-	top := TopFragment(results)
+	// Test the TopFragmentScore function
+	top := TopFragmentScore(results)
 	if top.ID != "1" {
 		t.Errorf("Unexpected top fragment: %+v", top)
 	}
