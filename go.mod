@@ -1,4 +1,4 @@
-module github.com/chand1012/simplesearch
+module github.com/chand1012/memory
 
 go 1.20
 
