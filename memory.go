@@ -112,6 +112,18 @@ func (m *Memory) Search(query string) ([]MemoryFragment, error) {
 	return results, nil
 }
 
+// IsIndexed returns true if the given ID is indexed
+func (m *Memory) IsIndexed(id string) (bool, error) {
+	_, err := m.index.GetInternal([]byte(id))
+	if err != nil {
+		if err == bleve.ErrorIndexPathDoesNotExist {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
 // TopFragmentScore returns the fragment with the highest score
 func TopFragmentScore(fragments []MemoryFragment) MemoryFragment {
 	var top MemoryFragment

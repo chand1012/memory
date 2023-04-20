@@ -36,6 +36,14 @@ func TestMemoryIndex(t *testing.T) {
 		t.Errorf("Unexpected search results: %+v", results)
 	}
 
+	isIndexed, err := m.IsIndexed("1")
+	if err != nil {
+		t.Fatalf("Failed to check if fragment is indexed: %v", err)
+	}
+	if !isIndexed {
+		t.Errorf("Fragment should be indexed")
+	}
+
 	// Test the TopFragmentScore function
 	top := TopFragmentScore(results)
 	if top.ID != "1" {
