@@ -1,4 +1,4 @@
-package simplesearch
+package memory
 
 import (
 	"reflect"
