@@ -10,7 +10,7 @@ func TestMemoryIndex(t *testing.T) {
 	testIndexPath := "test.bleve"
 
 	// Create a new memory index
-	m, err := New(testIndexPath)
+	m, _, err := New(testIndexPath)
 	if err != nil {
 		t.Fatalf("Failed to create memory index: %v", err)
 	}

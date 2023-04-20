@@ -15,19 +15,22 @@ type Memory struct {
 type MemoryFragment struct {
 	ID    string
 	Score float64
+	Avg   float64
 }
 
 // New creates a new memory index if one does not exist at the given path.
 // If one does exist, it opens it.
-func New(path string) (*Memory, error) {
+func New(path string) (*Memory, bool, error) {
+	new := false
 	index, err := bleve.Open(path)
 	if err != nil {
+		new = true
 		// create a mapping
 		mapping := bleve.NewIndexMapping()
 		// create the index
 		index, err = bleve.New(path, mapping)
 		if err != nil {
-			return nil, err
+			return nil, new, err
 		}
 	}
 
@@ -36,7 +39,7 @@ func New(path string) (*Memory, error) {
 		path:  path,
 	}
 
-	return m, nil
+	return m, new, nil
 }
 
 // Close closes the index
@@ -80,13 +83,32 @@ func (m *Memory) Search(query string) ([]MemoryFragment, error) {
 		searchResults.Hits = append(searchResults.Hits, r.Hits...)
 	}
 
-	var results []MemoryFragment
+	// Use a map to store the total score and count for each ID
+	idScoreCountMap := make(map[string]struct {
+		totalScore float64
+		count      int
+	})
+
 	for _, hit := range searchResults.Hits {
-		var result MemoryFragment
-		result.ID = hit.ID
-		result.Score = hit.Score
-		results = append(results, result)
+		// Accumulate the score and increment the count for the current ID
+		entry := idScoreCountMap[hit.ID]
+		entry.totalScore += hit.Score
+		entry.count++
+		idScoreCountMap[hit.ID] = entry
 	}
+
+	var results []MemoryFragment
+	for id, entry := range idScoreCountMap {
+		// Calculate the average score for each ID
+		avg := entry.totalScore / float64(entry.count)
+
+		results = append(results, MemoryFragment{
+			ID:    id,
+			Score: entry.totalScore,
+			Avg:   avg,
+		})
+	}
+
 	return results, nil
 }
 
