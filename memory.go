@@ -21,6 +21,17 @@ type MemoryFragment struct {
 // New creates a new memory index if one does not exist at the given path.
 // If one does exist, it opens it.
 func New(path string) (*Memory, bool, error) {
+	if path == ":memory:" {
+		index, err := bleve.NewMemOnly(bleve.NewIndexMapping())
+		if err != nil {
+			return nil, false, err
+		}
+		m := &Memory{
+			index: index,
+			path:  path,
+		}
+		return m, true, nil
+	}
 	new := false
 	index, err := bleve.Open(path)
 	if err != nil {
