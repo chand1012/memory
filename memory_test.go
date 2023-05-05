@@ -7,7 +7,7 @@ import (
 
 func TestMemoryIndex(t *testing.T) {
 	// Define a temporary path for the index file
-	testIndexPath := "test.bleve"
+	testIndexPath := ":memory:"
 
 	// Create a new memory index
 	m, _, err := New(testIndexPath)
